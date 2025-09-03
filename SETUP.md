@@ -59,11 +59,33 @@ where java
 set JAVA_HOME=C:\Program Files\OpenJDK\openjdk-21.0.8
 ```
 
-### 4. Alternative: Use Full Path
-Instead of `gradlew.bat build`, try:
+### 4. Debug: Find Which Java Gradle is Using
+Add debug flags to see exactly which Java version Gradle is using:
+
 ```cmd
-"C:\Program Files\OpenJDK\openjdk-21.0.8\bin\java" -version
+gradlew.bat --info build
+```
+This will show detailed output including the Java version being used.
+
+Or check the Java path directly:
+```cmd
+gradlew.bat -q javaToolchains
+```
+
+### 5. Force Gradle to Use Specific Java
+If Gradle is still using the wrong Java, force it by setting `JAVA_HOME` before running:
+
+```cmd
+set JAVA_HOME=C:\Program Files\OpenJDK\openjdk-21.0.8
+set PATH=%JAVA_HOME%\bin;%PATH%
+java -version
 gradlew.bat build
+```
+
+### 6. Last Resort: Use gradle.properties
+Create/edit `gradle.properties` in your project and add:
+```
+org.gradle.java.home=C:\Program Files\OpenJDK\openjdk-21.0.8
 ```
 
 ## Setup Steps
