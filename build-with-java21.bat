@@ -14,8 +14,16 @@ REM Stop any existing Gradle daemon
 echo Stopping Gradle daemon...
 gradlew.bat --stop
 
-REM Clean and build
-echo Building project...
-gradlew.bat clean build
+REM Test Gradle first
+echo Testing Gradle...
+gradlew.bat --version
+
+echo.
+echo Trying clean...
+gradlew.bat clean
+
+echo.
+echo Trying build with verbose output...
+gradlew.bat build --info --stacktrace
 
 pause
