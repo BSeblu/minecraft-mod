@@ -1,8 +1,70 @@
 # Custom Block Mod Setup Instructions
 
 ## Prerequisites
-- Java 21 or later
+- **Java 21** (required for NeoForge 1.21.1)
 - An IDE (IntelliJ IDEA recommended)
+
+## Installing Java 21 on Windows
+
+If you get the error "Unsupported class file major version 65", you need Java 21:
+
+### Method 1: Download from Oracle
+1. Go to https://www.oracle.com/java/technologies/downloads/#java21
+2. Download "Windows x64 Installer"
+3. Run the installer and follow instructions
+4. Restart Command Prompt/PowerShell after installation
+
+### Method 2: Using Chocolatey (if installed)
+```cmd
+choco install openjdk21
+```
+
+### Method 3: Using Windows Package Manager
+```cmd
+winget install Microsoft.OpenJDK.21
+```
+
+### Verify Installation
+Open Command Prompt and run:
+```cmd
+java -version
+```
+Should show version 21.x.x
+
+## Troubleshooting "Unsupported class file major version 65"
+
+If you have Java 21 installed but still get this error:
+
+### 1. Check JAVA_HOME Environment Variable
+```cmd
+echo %JAVA_HOME%
+```
+
+### 2. Find Java 21 Installation Path
+```cmd
+where java
+```
+
+### 3. Set JAVA_HOME (if needed)
+**Method A: Through System Settings**
+1. Press `Win + R`, type `sysdm.cpl`, press Enter
+2. Click "Environment Variables"
+3. Under "System Variables", click "New"
+4. Variable name: `JAVA_HOME`
+5. Variable value: Path to your Java 21 installation (e.g., `C:\Program Files\OpenJDK\openjdk-21.0.8`)
+6. Click OK and restart Command Prompt
+
+**Method B: Command Line (temporary)**
+```cmd
+set JAVA_HOME=C:\Program Files\OpenJDK\openjdk-21.0.8
+```
+
+### 4. Alternative: Use Full Path
+Instead of `gradlew.bat build`, try:
+```cmd
+"C:\Program Files\OpenJDK\openjdk-21.0.8\bin\java" -version
+gradlew.bat build
+```
 
 ## Setup Steps
 
