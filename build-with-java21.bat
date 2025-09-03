@@ -25,4 +25,7 @@ echo.
 echo Try build with verbose output:
 gradlew.bat build --info --stacktrace
 
+echo.
+echo Build finished with exit code: %ERRORLEVEL%
+
 pause
