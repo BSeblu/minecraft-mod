@@ -1,0 +1,103 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
+}
+
+version = '0.0.1-1.21.8'
+group = 'com.yourname.customblock'
+archivesBaseName = 'customblock'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    mavenLocal()
+}
+
+base {
+    archivesName = archivesBaseName
+}
+
+runs {
+    client {
+        taskName 'Client'
+        workingDirectory project.file('run')
+        ideaModule "${rootProject.name}.${project.name}.main"
+        
+        mods {
+            customblock {
+                source sourceSets.main
+            }
+        }
+    }
+
+    server {
+        taskName 'Server'
+        workingDirectory project.file('run')
+        ideaModule "${rootProject.name}.${project.name}.main"
+        
+        mods {
+            customblock {
+                source sourceSets.main
+            }
+        }
+    }
+
+    data {
+        taskName 'Data'
+        workingDirectory project.file('run')
+        ideaModule "${rootProject.name}.${project.name}.main"
+        
+        args '--mod', 'customblock', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+        mods {
+            customblock {
+                source sourceSets.main
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    implementation "net.neoforged:neoforge:21.3.9"
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version: neo_version, neo_version_range: neo_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = uri('https://maven.pkg.github.com/yourname/customblock')
+            credentials {
+                username = project.findProperty('gpr.user') ?: System.getenv('USERNAME')
+                password = project.findProperty('gpr.key') ?: System.getenv('TOKEN')
+            }
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
